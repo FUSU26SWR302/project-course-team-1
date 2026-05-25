@@ -1,8 +1,8 @@
-# HRS — Integrated HR and Project Management System
+# HRP — Integrated HR and Project Management System
 
 > **SWP391 · Software Development Project · FPT University · 2026**
 
-HRS (HRP – Human Resource & Project Management System) is a web-based internal platform that digitizes and automates HR operations and project management workflows within an organization. The system replaces fragmented manual processes (email, Excel, paper forms) with a unified, role-controlled platform supporting **6 actor types** and **54 use cases** across 8 functional modules.
+HRP (Human Resource & Project Management System) is a web-based internal platform that digitizes and automates HR operations and project management workflows within an organization. The system replaces fragmented manual processes (email, Excel, paper forms) with a unified, role-controlled platform supporting **6 actor types** and **54 use cases** across 8 functional modules.
 
 ---
 
@@ -24,7 +24,7 @@ HRS (HRP – Human Resource & Project Management System) is a web-based internal
 
 | Field | Details |
 |---|---|
-| **System name** | HRS – Integrated HR and Project Management System (HRP) |
+| **System name** | HRP – Integrated HR and Project Management System |
 | **Course** | SWP391 – Software Development Project |
 | **Team size** | 5 members |
 | **Target users** | Employee, Team Leader, HR Manager, General Manager, Administrator, Internal Agent |
@@ -33,7 +33,7 @@ HRS (HRP – Human Resource & Project Management System) is a web-based internal
 
 **Problem statement:** The organization currently manages HR and project operations through scattered, manual tools — paper files, Excel sheets, email threads, and disconnected fingerprint devices. This creates data inconsistency, no standardized approval flows, missing audit trails, and an absence of role-based access control (RBAC), leading to delays, errors, and security risks in critical HR operations.
 
-**Solution:** HRS provides a single integrated platform where:
+**Solution:** HRP provides a single integrated platform where:
 - HR processes (attendance, payroll, leave/OT requests, recruitment) are fully digitized with standardized approval flows.
 - Project and task management are unified with team-level permissions and real-time progress tracking.
 - An Internal AI Agent enables employees to execute commands via natural language within their permission scope.
@@ -167,8 +167,8 @@ Deploy     Vercel · Render · Supabase
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-org>/hrs.git
-cd hrs
+git clone https://github.com/<your-org>/HRP.git
+cd HRP
 
 # Install frontend dependencies
 cd frontend
@@ -227,7 +227,7 @@ npm run seed
 ## Project Structure
 
 ```
-hrs/
+HRP/
 ├── frontend/               # React Vite application
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
@@ -278,4 +278,4 @@ hrs/
 
 ---
 
-> **HRS** — *One platform for every HR and project operation — accurate, transparent, and role-controlled.*
+> **HRP** — *One platform for every HR and project operation — accurate, transparent, and role-controlled.*
