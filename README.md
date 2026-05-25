@@ -1,8 +1,8 @@
-# EduDesk — Academic Request Management System with AI Triage
+# HRS — Integrated HR and Project Management System
 
 > **SWP391 · Software Development Project · FPT University · 2026**
 
-EduDesk is a web-based platform that allows FPT University students to submit and track academic requests online 24/7. The system integrates AI to automatically triage simple requests and assists academic advisors in processing complex cases faster — following a **Human-in-the-Loop (HITL)** design principle.
+HRS (HRP – Human Resource & Project Management System) is a web-based internal platform that digitizes and automates HR operations and project management workflows within an organization. The system replaces fragmented manual processes (email, Excel, paper forms) with a unified, role-controlled platform supporting **6 actor types** and **54 use cases** across 8 functional modules.
 
 ---
 
@@ -24,19 +24,20 @@ EduDesk is a web-based platform that allows FPT University students to submit an
 
 | Field | Details |
 |---|---|
-| **System name** | EduDesk – Academic Request Management System with AI Triage |
+| **System name** | HRS – Integrated HR and Project Management System (HRP) |
 | **Course** | SWP391 – Software Development Project |
 | **Team size** | 5 members |
-| **Target users** | Students, Academic Advisors, Administrators at FPT University |
-| **Platform** | Web application (responsive, desktop & tablet) |
-| **Document version** | RDS v1.0 |
+| **Target users** | Employee, Team Leader, HR Manager, General Manager, Administrator, Internal Agent |
+| **Platform** | Web application (Chrome, Firefox, Edge) |
+| **Document version** | SRS v1.0 |
 
-**Problem statement:** FPT University students frequently need to submit academic requests (class transfer, semester deferral, grade appeal, student confirmation, etc.). The current process is slow, opaque, and creates heavy workload on advisors — especially at the start and end of each semester.
+**Problem statement:** The organization currently manages HR and project operations through scattered, manual tools — paper files, Excel sheets, email threads, and disconnected fingerprint devices. This creates data inconsistency, no standardized approval flows, missing audit trails, and an absence of role-based access control (RBAC), leading to delays, errors, and security risks in critical HR operations.
 
-**Solution:** EduDesk applies a HITL AI model where:
-- AI auto-processes simple, clear-cut requests within minutes.
-- Complex or uncertain cases are escalated to human advisors with AI-suggested responses.
-- Every AI decision is auditable and overridable — no black box.
+**Solution:** HRS provides a single integrated platform where:
+- HR processes (attendance, payroll, leave/OT requests, recruitment) are fully digitized with standardized approval flows.
+- Project and task management are unified with team-level permissions and real-time progress tracking.
+- An Internal AI Agent enables employees to execute commands via natural language within their permission scope.
+- Role-based access control (RBAC) is enforced across all 6 actor types, with full audit trail for sensitive operations.
 
 ---
 
@@ -45,25 +46,25 @@ EduDesk is a web-based platform that allows FPT University students to submit an
 This project is built around deliberate, research-driven learning in three areas:
 
 ### 1. Algorithms
-- **AI Triage Engine** — configurable confidence threshold (default 0.80) determines whether an academic request is auto-approved, auto-rejected, or escalated to a human advisor.
-- **RAG (Retrieval-Augmented Generation)** — the FAQ chatbot retrieves answers strictly from an admin-managed knowledge base of real university policies, preventing hallucination.
-- **SLA Priority Scheduling** — requests in the advisor queue are sorted by remaining SLA time, with color-coded urgency indicators (green / yellow / red).
+- **AI Agent Command Processing** — the Internal Agent authenticates the requesting user's identity and permission scope before executing any natural-language command, preventing unauthorized actions.
+- **SLA-aware Approval Routing** — leave, OT, remote work, and shift-swap requests are routed to the correct approver based on the employee's assigned Team Leader or HR Manager, with configurable deadline tracking.
+- **Cron Job – Auto Payroll Generation** — a background scheduler automatically triggers payroll calculation per a schedule configured by the General Manager, reducing manual computation errors.
 
 ### 2. System & Architecture
-- **Human-in-the-Loop (HITL)** — the architectural pattern that sits at the center of every design decision. AI never has the final word; students can appeal within 3 days, and advisors can override at any time.
-- **Fail-safe by design** — API errors always escalate to a human; the system never auto-rejects a request due to a technical failure.
-- **Audit trail** — every AI action is recorded in `AI_LOG` (prompt, output, confidence score, override reason), satisfying SWP391's Responsible AI requirements.
-- **Role-based access control** — three-tier permission system (Student / Advisor / Admin) enforced at the API level with JWT authentication.
-- **Dynamic form schema** — request form fields are driven by admin-configured schemas per request type, making the system extensible without code changes.
+- **Role-Based Access Control (RBAC)** — a 6-tier permission hierarchy (Employee → Team Leader → HR Manager → General Manager → Administrator → Internal Agent) enforced at the API level. Each role inherits the permissions of lower roles where applicable.
+- **Fingerprint Sync Service** — a background sync service bridges hardware fingerprint devices to the attendance module, removing the need for manual data entry.
+- **Audit Trail** — all sensitive operations (payroll edits, leave approvals, login events) are logged for traceability and compliance.
+- **Social Platform API Integration** — recruitment job postings are published to LinkedIn and other platforms via API credentials configured by the Administrator.
+- **Fail-safe email notifications** — automated emails for login credentials, approval results, and interview schedules are decoupled from core operations; email disruption delays notifications but does not affect system data integrity.
 
 ### 3. Technology
 | Layer | Choice | Why |
 |---|---|---|
-| **Frontend** | React + Vite + TypeScript + Tailwind CSS | Rich UI library ecosystem (`react-table`, `react-big-calendar`), leaner than Next.js for an internal admin portal, faster builds with Bun |
-| **Backend** | Node.js + Express | Non-blocking I/O handles high-concurrency peaks (course registration periods); flexible middleware for rate limiting, logging, custom auth |
-| **Database** | PostgreSQL via Supabase | ACID compliance critical for academic records; serverless, easy setup |
-| **AI / Automation** | Openclaw (self-hosted) + N8N | Full control over AI pipeline; self-hosting avoids EC2 free-tier latency issues (verified by testing) |
-| **Deployment** | Vercel (FE) + Render (BE) + Supabase (DB) | Cost-effective for a student project; Render avoids the cold-start and speed issues of EC2 free tier |
+| **Frontend** | React + Vite + TypeScript + Tailwind CSS | Component-driven UI, strong typing for complex form schemas and role-conditional views |
+| **Backend** | Node.js + Express | Non-blocking I/O suitable for concurrent approval flows and background sync jobs; flexible middleware for RBAC, logging, auth |
+| **Database** | PostgreSQL (18 core tables) | ACID compliance critical for payroll and attendance records; relational model fits RBAC and approval flow foreign keys |
+| **AI / Agent** | Internal Agent service | Natural-language command parsing with identity verification and permission-scoped execution |
+| **Deployment** | Vercel (FE) + Render (BE) + Supabase (DB) | Cost-effective for a student project; Render avoids cold-start issues of EC2 free tier |
 
 ---
 
@@ -72,12 +73,13 @@ This project is built around deliberate, research-driven learning in three areas
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        Clients                              │
-│          Browser (Student / Advisor / Admin)                │
+│    Browser (Employee / Team Leader / HR Manager /           │
+│             General Manager / Administrator)                │
 └────────────────────────┬────────────────────────────────────┘
                          │ HTTPS
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│              Frontend  (React Vite + TypeScript)            │
+│              Frontend  (React + Vite + TypeScript)          │
 │                    Deployed on Vercel                       │
 └────────────────────────┬────────────────────────────────────┘
                          │ REST API / JWT
@@ -86,16 +88,19 @@ This project is built around deliberate, research-driven learning in three areas
 │              Backend  (Express.js + Node.js)                │
 │                    Deployed on Render                       │
 │  ┌──────────────────┐   ┌───────────────────────────────┐  │
-│  │  Request Router  │   │  AI Triage Service            │  │
-│  │  Auth Middleware │   │  (confidence threshold logic) │  │
-│  │  SLA Scheduler   │   │  FAQ Chatbot (RAG)            │  │
+│  │  Auth Middleware  │   │  Internal Agent Service       │  │
+│  │  RBAC Enforcer   │   │  (NL command parser + authz)  │  │
+│  │  Approval Router │   │  Fingerprint Sync Service     │  │
+│  │  Cron Scheduler  │   │  Email Notification Service   │  │
 │  └────────┬─────────┘   └──────────────┬────────────────┘  │
 └───────────┼──────────────────────────── ┼───────────────────┘
             │                             │
-     ┌──────▼──────┐              ┌───────▼────────┐
-     │  PostgreSQL  │              │   Openclaw AI  │
-     │  (Supabase)  │              │  (self-hosted) │
-     └─────────────┘              └────────────────┘
+     ┌──────▼──────┐              ┌───────▼────────────┐
+     │  PostgreSQL  │              │  External Services │
+     │  (Supabase)  │              │  Social Platform   │
+     │  18 tables   │              │  API (LinkedIn...) │
+     └─────────────┘              │  Fingerprint HW    │
+                                  └────────────────────┘
 ```
 
 ---
@@ -103,10 +108,10 @@ This project is built around deliberate, research-driven learning in three areas
 ## Tech Stack
 
 ```
-Frontend   React 18 · Vite · TypeScript · Tailwind CSS · Bun
-Backend    Node.js · Express.js · JWT · Nodemailer (OTP)
-Database   PostgreSQL · Supabase (managed)
-AI         Openclaw (self-hosted) · N8N (workflow automation)
+Frontend   React 18 · Vite · TypeScript · Tailwind CSS
+Backend    Node.js · Express.js · JWT · Nodemailer
+Database   PostgreSQL · Supabase (managed, 18 core tables)
+Agent      Internal AI Agent (NL command execution)
 Deploy     Vercel · Render · Supabase
 ```
 
@@ -114,25 +119,38 @@ Deploy     Vercel · Render · Supabase
 
 ## Key Features
 
-**For Students**
-- Submit academic requests via dynamic, type-aware forms
-- Attach supporting documents (PDF / JPG, max 5 MB × 3 files)
-- Track request status on a visual timeline: Submitted → AI Processing → Result / Escalated → Closed
-- Chat with the 24/7 AI FAQ bot — answers cited from official policy documents
-- Appeal any AI decision within 3 days
+**For Employees**
+- View and update personal profile
+- Clock in/out via fingerprint device (auto-synced)
+- Submit leave, overtime, remote work, shift-swap, and special-regime requests
+- View personal payslips
+- Participate in assigned projects and create/update tasks
+- Send natural-language commands to the Internal Agent (within permission scope)
 
-**For Academic Advisors**
-- SLA-prioritized request queue with color-coded urgency
-- Full request detail view: content, attachments, AI analysis, suggested response
-- Approve / reject / edit AI suggestions before sending to student
-- Override any auto-processed AI decision (with mandatory reason)
+**For Team Leaders**
+- All Employee capabilities
+- Approve/reject leave and OT requests from direct reports
+- Manage team members and project assignments
+- Track task progress within managed projects
+
+**For HR Managers**
+- Manage employee records (add, update, deactivate, assign roles)
+- Configure attendance shifts and approval workflows
+- Configure payroll components and salary templates
+- Manage recruitment: post jobs (with Social Platform API), handle candidate profiles, schedule interviews, process hiring proposals
+- Generate and export payroll reports
+
+**For General Managers**
+- Approve finalized payroll runs
+- Manage cross-team projects
+- Configure the auto-payroll cron job schedule
+- Access full organization-wide reports and dashboards in real time
 
 **For Administrators**
-- Configure request types, form schemas, SLA deadlines, and AI confidence thresholds
-- Manage users (create, import via CSV, assign roles, lock/unlock)
-- Manage chatbot knowledge base (upload / update / delete policy documents)
-- Dashboard: AI self-processing rate, SLA compliance, advisor workload, override frequency
-- Export reports to CSV
+- Manage system security: role assignments, account lock/unlock, session control
+- Monitor login activity and detect suspicious behavior
+- Configure Social Platform API credentials for recruitment integration
+- Perform password resets for any account
 
 ---
 
@@ -140,20 +158,21 @@ Deploy     Vercel · Render · Supabase
 
 ### Prerequisites
 
-- Node.js ≥ 18 / Bun ≥ 1.0
+- Node.js ≥ 18
 - PostgreSQL (or a Supabase project)
-- Openclaw instance (self-hosted) or compatible AI API endpoint
+- Fingerprint Sync Service endpoint (for attendance hardware integration)
+- Social Platform API credentials (for recruitment posting — configured by Administrator)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-org>/edudesk.git
-cd edudesk
+git clone https://github.com/<your-org>/hrs.git
+cd hrs
 
 # Install frontend dependencies
 cd frontend
-bun install
+npm install
 
 # Install backend dependencies
 cd ../backend
@@ -168,11 +187,12 @@ Create `.env` files in `frontend/` and `backend/` based on the provided `.env.ex
 ```
 DATABASE_URL=postgresql://...
 JWT_SECRET=...
-AI_API_URL=https://your-openclaw-instance/...
-AI_API_KEY=...
 SMTP_HOST=...
 SMTP_USER=...
 SMTP_PASS=...
+FINGERPRINT_SYNC_URL=https://...
+SOCIAL_API_KEY=...
+CRON_PAYROLL_SCHEDULE=...
 ```
 
 **frontend/.env**
@@ -187,7 +207,7 @@ VITE_API_BASE_URL=http://localhost:3000
 npm run dev
 
 # Start frontend (from /frontend)
-bun run dev
+npm run dev
 ```
 
 The frontend will be available at `http://localhost:5173` and the backend at `http://localhost:3000`.
@@ -207,11 +227,11 @@ npm run seed
 ## Project Structure
 
 ```
-edudesk/
+hrs/
 ├── frontend/               # React Vite application
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Route-level pages (Student, Advisor, Admin)
+│   │   ├── pages/          # Route-level pages per role (Employee, TL, HR, GM, Admin)
 │   │   ├── hooks/          # Custom React hooks
 │   │   ├── services/       # API client functions
 │   │   └── types/          # TypeScript type definitions
@@ -219,17 +239,16 @@ edudesk/
 │
 ├── backend/                # Express.js API server
 │   ├── src/
-│   │   ├── routes/         # API route handlers
-│   │   ├── middleware/      # Auth, rate limiting, error handling
-│   │   ├── services/        # Business logic (AI triage, SLA, notifications)
-│   │   ├── models/          # Database models / queries
-│   │   └── utils/           # Helpers (OTP, file upload, etc.)
+│   │   ├── routes/         # API route handlers (hrp.authentication, hrp.employee, etc.)
+│   │   ├── middleware/      # Auth, RBAC enforcement, rate limiting, error handling
+│   │   ├── services/        # Business logic (payroll engine, attendance sync, agent, notifications)
+│   │   ├── models/          # Database models / queries (18 core tables)
+│   │   └── utils/           # Helpers (OTP, file upload, cron scheduler, etc.)
 │   └── migrations/          # PostgreSQL migration scripts
 │
 ├── docs/
-│   ├── RDS_v1.0.docx        # Requirements Description Specification
+│   ├── SRS_v1.0.docx        # Software Requirements Specification
 │   ├── architecture.drawio  # System architecture diagram
-│   ├── SRS.md               # Software Requirements Specification
 │   └── paper.md             # Research paper
 │
 └── README.md
@@ -243,7 +262,7 @@ edudesk/
 |---|---|
 | TBD | Team Lead / Backend |
 | TBD | Frontend |
-| TBD | AI Integration |
+| TBD | AI Agent Integration |
 | TBD | Database / DevOps |
 | TBD | QA / Documentation |
 
@@ -253,11 +272,10 @@ edudesk/
 
 | Document | Description |
 |---|---|
-| [`docs/RDS_v1.0.docx`](docs/RDS_v1.0.docx) | Requirements Description Specification — actors, use cases, functional scope |
-| [`docs/SRS.md`](docs/SRS.md) | Software Requirements Specification — detailed functional & non-functional requirements |
+| [`docs/SRS_v1.0.docx`](docs/SRS_v1.0.docx) | Software Requirements Specification — actors, 54 use cases, functional & non-functional requirements, DB design |
 | [`docs/architecture.drawio`](docs/architecture.drawio) | System architecture diagram (draw.io) |
-| [`docs/paper.md`](docs/paper.md) | Research paper — HITL AI in academic request management |
+| [`docs/paper.md`](docs/paper.md) | Research paper — RBAC and AI Agent in integrated HR systems |
 
 ---
 
-> **EduDesk** — *Because every student's request deserves a fast, fair, and transparent answer.*
+> **HRS** — *One platform for every HR and project operation — accurate, transparent, and role-controlled.*
