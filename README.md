@@ -1,6 +1,6 @@
 # HRP — Integrated HR and Project Management System
 
-> **SWP391 · Software Development Project · FPT University · 2026**
+> **SWR391 · Software Development Project · FPT University · 2026**
 
 HRP (Human Resource & Project Management System) is a web-based internal platform that digitizes and automates HR operations and project management workflows within an organization. The system replaces fragmented manual processes (email, Excel, paper forms) with a unified, role-controlled platform supporting **6 actor types** and **54 use cases** across 8 functional modules.
 
@@ -25,7 +25,7 @@ HRP (Human Resource & Project Management System) is a web-based internal platfor
 | Field | Details |
 |---|---|
 | **System name** | HRP – Integrated HR and Project Management System |
-| **Course** | SWP391 – Software Development Project |
+| **Course** | SWR391 – Software Development Project |
 | **Team size** | 5 members |
 | **Target users** | Employee, Team Leader, HR Manager, General Manager, Administrator, Internal Agent |
 | **Platform** | Web application (Chrome, Firefox, Edge) |
