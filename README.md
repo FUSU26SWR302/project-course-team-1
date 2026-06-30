@@ -274,7 +274,8 @@ HRP/
 |---|---|
 | [`docs/SRS_v1.0.docx`](docs/SRS_v1.0.docx) | Software Requirements Specification — actors, 54 use cases, functional & non-functional requirements, DB design |
 | [`docs/architecture.drawio`](docs/architecture.drawio) | System architecture diagram (draw.io) |
-| [`docs/paper.md`](docs/paper.md) | Research paper — RBAC and AI Agent in integrated HR systems |
+| [Paper/Paper_Research_v1.0.docx](Paper/Paper_Research.docx) | Research paper draft (DOCX) — RBAC and AI Agent in integrated HR systems |
+| [Paper/Paper_Research_v2.0.pdf](Paper/Paper_Research__2_.pdf) | Research paper draft (PDF) — RBAC and AI Agent in integrated HR systems |
 
 ---
 
